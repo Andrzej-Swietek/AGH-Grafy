@@ -1,10 +1,13 @@
 from typing import Callable
+
 from lib.core.graph import Graph
+from lib.graph_traversal.graph_traversal import GraphTraversal
+
 
 class DFSVisitor(GraphTraversal):
     def traverse(self, graph: Graph, start_vertex: int, callback: Callable[[int], None]):
         visited = set()
-        
+
         def dfs(v):
             if v in visited:
                 return
@@ -12,5 +15,5 @@ class DFSVisitor(GraphTraversal):
             callback(v)
             for neighbor in graph.to_adjacency_list().get(v, []):
                 dfs(neighbor)
-        
+
         dfs(start_vertex)

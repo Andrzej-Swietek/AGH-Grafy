@@ -1,3 +1,8 @@
+from typing import List, Dict
+
+from lib.core.graph import Graph
+
+
 class GraphReader:
     @staticmethod
     def read_adjacency_matrix(filename: str) -> List[List[int]]:
@@ -39,6 +44,7 @@ class GraphReader:
                 row = list(map(int, line.strip().split()))
                 matrix.append(row)
             return matrix
+
 
 class GraphWriter:
     @staticmethod

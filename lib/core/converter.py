@@ -1,5 +1,10 @@
 from typing import List, Dict, Tuple, Type
+
 from lib.core.graph import Graph
+from lib.core.adjacency_list_graph import AdjacencyListGraph
+from lib.core.adjacency_matrix_graph import AdjacencyMatrixGraph
+from lib.core.incidence_matrix_graph import IncidenceMatrixGraph
+
 
 class GraphConverter:
     @classmethod
@@ -11,7 +16,7 @@ class GraphConverter:
                 if matrix[i][j] == 1:
                     graph.add_edge(i, j)
         return graph
-    
+
     @classmethod
     def from_incidence_matrix(cls: Type['Graph'], matrix: List[List[int]]) -> 'Graph':
         num_vertices = len(matrix)
@@ -22,7 +27,7 @@ class GraphConverter:
             if len(vertices) == 2:
                 graph.add_edge(vertices[0], vertices[1])
         return graph
-    
+
     @classmethod
     def from_adjacency_list(cls: Type['Graph'], adjacency_list: Dict[int, List[int]]) -> 'Graph':
         num_vertices = len(adjacency_list)

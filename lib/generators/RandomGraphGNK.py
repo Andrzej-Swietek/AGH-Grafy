@@ -1,4 +1,9 @@
+from random import random, sample
+
 from lib.core.graph import Graph
+from lib.core.adjacency_matrix_graph import AdjacencyMatrixGraph
+from lib.generators.RandomGraphGeneator import RandomGraphGenerator
+
 
 class RandomGraphGNK(RandomGraphGenerator):
     def __init__(self, num_vertices: int, num_edges: int):
@@ -9,7 +14,7 @@ class RandomGraphGNK(RandomGraphGenerator):
         graph = AdjacencyMatrixGraph(self.num_vertices)
         edges = set()
         while len(edges) < self.num_edges:
-            u, v = random.sample(range(self.num_vertices), 2)
+            u, v = sample(range(self.num_vertices), 2)
             if (u, v) not in edges and (v, u) not in edges:
                 graph.add_edge(u, v)
                 edges.add((u, v))

@@ -1,7 +1,8 @@
-from lib.core.graph import Graph,
+from lib.core.graph import Graph
 from lib.core.adjacency_matrix_graph import AdjacencyMatrixGraph
 from lib.core.incidence_matrix_graph import IncidenceMatrixGraph
 from lib.core.adjacency_list_graph import AdjacencyListGraph
+
 
 class GraphFactory:
     @staticmethod

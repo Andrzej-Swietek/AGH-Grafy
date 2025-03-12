@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Callable
+
 from lib.core.graph import Graph
+
 
 class GraphTraversal(ABC):
     @abstractmethod

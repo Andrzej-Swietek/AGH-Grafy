@@ -1,3 +1,6 @@
+from typing import Callable
+from lib.core.graph import Graph
+
 class DFSVisitor(GraphTraversal):
     def traverse(self, graph: Graph, start_vertex: int, callback: Callable[[int], None]):
         visited = set()

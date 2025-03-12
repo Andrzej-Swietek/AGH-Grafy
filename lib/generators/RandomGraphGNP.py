@@ -1,3 +1,5 @@
+from lib.core.graph import Graph
+
 class RandomGraphGNP(RandomGraphGenerator):
     def __init__(self, num_vertices: int, probability: float):
         self.num_vertices = num_vertices

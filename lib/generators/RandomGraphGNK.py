@@ -1,3 +1,5 @@
+from lib.core.graph import Graph
+
 class RandomGraphGNK(RandomGraphGenerator):
     def __init__(self, num_vertices: int, num_edges: int):
         self.num_vertices = num_vertices

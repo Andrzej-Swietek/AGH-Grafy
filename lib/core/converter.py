@@ -1,3 +1,6 @@
+from typing import List, Dict, Tuple, Type
+from lib.core.graph import Graph
+
 class GraphConverter:
     @classmethod
     def from_adjacency_matrix(cls: Type['Graph'], matrix: List[List[int]]) -> 'Graph':

@@ -1,3 +1,6 @@
+from typing import List, Dict, Tuple
+from lib.core.graph import Graph
+
 class AdjacencyListGraph(Graph):
     """
     Implementacja grafu przy użyciu listy sąsiedztwa.

@@ -1,3 +1,6 @@
+from typing import List, Dict, Tuple
+from lib.core.graph import Graph
+
 class IncidenceMatrixGraph(Graph):
     """
     Implementacja grafu przy użyciu macierzy incydencji.

@@ -1,3 +1,6 @@
+from typing import List, Dict, Tuple
+from lib.core.graph import Graph
+
 class AdjacencyMatrixGraph(Graph):
     """
     Implementacja grafu przy użyciu macierzy sąsiedztwa.

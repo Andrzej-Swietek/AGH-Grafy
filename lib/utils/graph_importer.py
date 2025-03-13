@@ -26,9 +26,9 @@ class GraphReader:
         with open(filename, 'r') as file:
             adjacency_list = {}
             for line in file:
-                parts = line.strip().split(':')
-                vertex = int(parts[0])
-                neighbors = list(map(int, parts[1].strip().split()))
+                parts = line.strip().split()
+                vertex = int(parts[0].replace('.', ''))
+                neighbors = list(map(int, parts[1:]))
                 adjacency_list[vertex] = neighbors
             return adjacency_list
 

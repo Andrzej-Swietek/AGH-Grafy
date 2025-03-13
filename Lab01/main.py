@@ -6,6 +6,7 @@ from lib.generators.RandomGraphGNP import RandomGraphGNP
 from lib.utils.graph_importer import GraphWriter, GraphReader
 from lib.visualization.graph_visualizer import GraphVisualizer
 
+
 def process_graph(input_file: str, input_type: str):
     if input_type == "adjacency_matrix":
         matrix = GraphReader.read_adjacency_matrix(input_file)
@@ -39,6 +40,7 @@ def process_graph(input_file: str, input_type: str):
     GraphVisualizer.draw_natural(graph)
     print("Visualization complete.")
 
+
 def generate_random_graph(mode: str, n: int, param: float):
     if mode == "gnk":
         generator = RandomGraphGNK(n, int(param))
@@ -51,6 +53,7 @@ def generate_random_graph(mode: str, n: int, param: float):
     print("Random graph generated successfully.")
     GraphWriter.write_adjacency_list(graph, "random_graph.txt")
     GraphVisualizer.draw(graph)
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description='Grafy-Lab01')
@@ -65,7 +68,16 @@ def main() -> None:
         if not args.input:
             print("Error: Input file required for task 1")
             return
-        process_graph(args.input, "adjacency_matrix")
+
+        if "adj_list" in args.input:
+            process_graph(args.input, "adjacency_list")
+        elif "adj_matrix" in args.input:
+            process_graph(args.input, "adjacency_matrix")
+        elif "incidence_matrix" in args.input:
+            process_graph(args.input, "incidence_matrix")
+        else:
+            print("Error: Unknown file format. Expected 'adj_list', 'adj_matrix', or 'incidence_matrix' in filename.")
+
     elif args.task == 2:
         if not args.input:
             print("Error: Input file required for task 2")
@@ -81,7 +93,6 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-
     """
       1. Napisać program kodujący grafy proste za pomocą macierzy sąsiedztwa, macierzy incydencji i list sąsiędztwa. 
       Stworzyć moduł do zmianydanego kodowania na pozostałe.
@@ -96,4 +107,3 @@ if __name__ == '__main__':
     """
 
     main()
-

@@ -4,7 +4,10 @@ from lib.core.graph import Graph
 from lib.core.adjacency_list_graph import AdjacencyListGraph
 from lib.core.adjacency_matrix_graph import AdjacencyMatrixGraph
 from lib.core.incidence_matrix_graph import IncidenceMatrixGraph
+from lib.utils.sequence_checker import SequenceChecker
+from lib.core.graph_factory import GraphFactory
 
+import numpy as np
 
 class GraphConverter:
     @classmethod
@@ -46,4 +49,29 @@ class GraphConverter:
                     graph.adjacency_list[v] = []
                 graph.add_edge(u, v)
 
+        return graph
+
+    @classmethod
+    def from_graphic_sequence(cls: Type['Graph'], graphic_sequence: List[int], graph_type = "adjacency_matrix") -> 'Graph': 
+        if not SequenceChecker.is_graphic(graphic_sequence):
+            raise ValueError("Provided sequence is not graphic.")
+        
+        num_vertices = len(graphic_sequence)
+        graph = GraphFactory.create_graph(graph_type, num_vertices)
+        
+        seq = graphic_sequence.copy()
+        seq.sort(reverse=True)
+        indices = list(range(num_vertices))
+
+        while not all(v == 0 for v in seq):
+            deg = seq.pop(0)
+            v = indices.pop(0) 
+            for i in range(deg):
+                seq[i] -= 1
+                graph.add_edge(v, indices[i])
+                
+            sorting_indices = np.argsort(seq)[::-1]
+            indices = [indices[i] for i in sorting_indices]
+            seq = [seq[i] for i in sorting_indices]
+        
         return graph

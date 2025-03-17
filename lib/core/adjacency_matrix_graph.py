@@ -26,6 +26,9 @@ class AdjacencyMatrixGraph(Graph):
                 if self.matrix[i][j] == 1:
                     edges.append((i, j))
         return edges
+    
+    def edge_exists(self, u: int, v: int) -> bool:
+        return self.matrix[u][v] == 1 or self.matrix[v][u] == 1
 
     def to_adjacency_matrix(self) -> List[List[int]]:
         return self.matrix
@@ -47,3 +50,8 @@ class AdjacencyMatrixGraph(Graph):
                 if self.matrix[i][j] == 1:
                     adjacency_list[i].append(j)
         return adjacency_list
+
+    def to_graphic_sequence(self) -> List[int]:
+        graphic_sequence = [sum(row) for row in self.matrix]
+        graphic_sequence.sort(reverse=True)
+        return graphic_sequence

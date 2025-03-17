@@ -19,6 +19,14 @@ python -m Lab01.main -t 3 -m gnp -n 10 -p 0.3
 
 ### Lab 02
 
+```shell
+python -m Lab02.main -t 1
+```
+
+```shell
+python -m Lab02.main -t 2       
+```
+
 ### Lab 03
 
 ### Lab 04

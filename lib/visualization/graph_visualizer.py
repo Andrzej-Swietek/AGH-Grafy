@@ -7,14 +7,15 @@ from lib.core.graph import Graph
 
 class GraphVisualizer:
     @staticmethod
-    def draw(graph: Graph):
+    def draw(graph: Graph, show:bool = True, ax: plt.Axes = None):
         num_vertices = graph.num_vertices
         edges = graph.get_edges()
 
         theta = np.linspace(0, 2 * np.pi, num_vertices, endpoint=False)
         positions = {i: (np.cos(theta[i]), np.sin(theta[i])) for i in range(num_vertices)}
 
-        fig, ax = plt.subplots()
+        if ax is None:
+            fig, ax = plt.subplots()
         ax.set_aspect('equal')
         ax.set_xticks([])
         ax.set_yticks([])
@@ -30,6 +31,14 @@ class GraphVisualizer:
             ax.text(x, y, str(i), fontsize=12, ha='center', va='center', zorder=4, color='white',
                     bbox=dict(facecolor='black', edgecolor='black', boxstyle='circle'))
 
+        if show:
+            plt.show()
+        
+    @staticmethod
+    def draw_side_by_side(graph1: Graph, graph2: Graph):
+        fig, axs = plt.subplots(1, 2)
+        GraphVisualizer.draw(graph1, show=False, ax=axs[0])
+        GraphVisualizer.draw(graph2, show=False, ax=axs[1])
         plt.show()
 
     @staticmethod

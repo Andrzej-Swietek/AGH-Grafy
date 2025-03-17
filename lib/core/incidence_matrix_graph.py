@@ -22,6 +22,9 @@ class IncidenceMatrixGraph(Graph):
 
     def get_edges(self) -> List[Tuple[int, int]]:
         return self.edges
+    
+    def edge_exists(self, u: int, v: int) -> bool:
+        return (u, v) in self.edges or (v, u) in self.edges
 
     def to_adjacency_matrix(self) -> List[List[int]]:
         matrix = [[0] * self.num_vertices for _ in range(self.num_vertices)]
@@ -43,3 +46,11 @@ class IncidenceMatrixGraph(Graph):
             adjacency_list[u].append(v)
             adjacency_list[v].append(u)
         return adjacency_list
+
+    def to_graphic_sequence(self) -> List[int]:
+        graphic_sequence = [0] * self.num_vertices
+        for u, v in self.edges:
+            graphic_sequence[u] += 1
+            graphic_sequence[v] += 1
+        graphic_sequence.sort(reverse=True)
+        return graphic_sequence

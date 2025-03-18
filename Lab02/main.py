@@ -1,12 +1,11 @@
 import argparse
+from copy import deepcopy
 
 from lib.core.converter import GraphConverter
-from lib.generators.RandomGraphGNK import RandomGraphGNK
-from lib.generators.RandomGraphGNP import RandomGraphGNP
-from lib.utils.graph_importer import GraphWriter, GraphReader
 from lib.visualization.graph_visualizer import GraphVisualizer
 from lib.utils.sequence_checker import SequenceChecker
 from lib.utils.components_finder import ComponentsFinder
+from lib.utils.graph_randomizer import GraphRandomizer
 
 GRAPHIC_SEQUENCE = [4, 2, 2, 3, 2, 1, 4, 2, 2, 2, 2]
 NON_GRAPHIC_SEQUENCE = [4, 4, 3, 1, 2]
@@ -28,13 +27,13 @@ def task_one():
 def task_two():
     print("Task 2")
     n = 10
-    print(f"Creating graph from graphic sequence: {GRAPHIC_SEQUENCE}")
+    print(f"Creating graph from graphic sequence: {GRAPHIC_SEQUENCE} ...")
     graph = GraphConverter.from_graphic_sequence(GRAPHIC_SEQUENCE)
+    graph_randomized = deepcopy(graph)
     print("Graph created successfully.")
     print(f"Randomizing graph {n} times...")
-    graph_randomized = GraphConverter.from_graphic_sequence(GRAPHIC_SEQUENCE)
-    graph_randomized.randomize(n)
-    print("Graph randomized successfully.")
+    GraphRandomizer.randomize(graph_randomized, n)
+    print("Randomizing done.")
     print("Comparing graphs...")
     GraphVisualizer.draw_side_by_side(graph, graph_randomized)
     print("Visualization complete.")
@@ -44,12 +43,12 @@ def task_three():
     print("Task 3")
     print(f"Creating graph from graphic sequence: {GRAPHIC_SEQUENCE}")
     graph = GraphConverter.from_graphic_sequence(GRAPHIC_SEQUENCE)
+    graph_randomized = deepcopy(graph)
     print("Graph created successfully.")
     print("Randomizing graph until it is has more than 1 connected component...")
-    graph_randomized = GraphConverter.from_graphic_sequence(GRAPHIC_SEQUENCE)
     n = 0
     while len(ComponentsFinder.find(graph_randomized)) == 1:
-        graph_randomized.randomize(1)
+        GraphRandomizer.randomize(graph_randomized, 1)
         n += 1
     print(f"Graph randomized {n} times.")
     print("Graph components:")

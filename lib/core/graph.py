@@ -65,7 +65,7 @@ class GraphOperations(ABC):
     def randomize(self, num_exchanges: int):
         for _ in range(num_exchanges):
             if not self.exchange_random_edges():
-                break
+                raise ValueError("Cannot randomize graph.")
 
 
 class GraphRepresentation(ABC):

@@ -27,6 +27,9 @@ python -m Lab02.main -t 1
 python -m Lab02.main -t 2       
 ```
 
+```shell
+python -m Lab02.main -t 3       
+```
 ### Lab 03
 
 ### Lab 04

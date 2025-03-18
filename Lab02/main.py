@@ -6,6 +6,7 @@ from lib.generators.RandomGraphGNP import RandomGraphGNP
 from lib.utils.graph_importer import GraphWriter, GraphReader
 from lib.visualization.graph_visualizer import GraphVisualizer
 from lib.utils.sequence_checker import SequenceChecker
+from lib.utils.components_finder import ComponentsFinder
 
 GRAPHIC_SEQUENCE = [4, 2, 2, 3, 2, 1, 4, 2, 2, 2, 2]
 NON_GRAPHIC_SEQUENCE = [4, 4, 3, 1, 2]
@@ -22,7 +23,8 @@ def task_one():
             print("Visualizing graph...")
             GraphVisualizer.draw(graph)
             print("Visualization complete.")
-            
+
+
 def task_two():
     print("Task 2")
     n = 10
@@ -33,6 +35,27 @@ def task_two():
     graph_randomized = GraphConverter.from_graphic_sequence(GRAPHIC_SEQUENCE)
     graph_randomized.randomize(n)
     print("Graph randomized successfully.")
+    print("Comparing graphs...")
+    GraphVisualizer.draw_side_by_side(graph, graph_randomized)
+    print("Visualization complete.")
+
+
+def task_three():
+    print("Task 3")
+    print(f"Creating graph from graphic sequence: {GRAPHIC_SEQUENCE}")
+    graph = GraphConverter.from_graphic_sequence(GRAPHIC_SEQUENCE)
+    print("Graph created successfully.")
+    print("Randomizing graph until it is has more than 1 connected component...")
+    graph_randomized = GraphConverter.from_graphic_sequence(GRAPHIC_SEQUENCE)
+    n = 0
+    while len(ComponentsFinder.find(graph_randomized)) == 1:
+        graph_randomized.randomize(1)
+        n += 1
+    print(f"Graph randomized {n} times.")
+    print("Graph components:")
+    ComponentsFinder.print_components(ComponentsFinder.find(graph))
+    print("Randomized graph components:")
+    ComponentsFinder.print_components(ComponentsFinder.find(graph_randomized))
     print("Comparing graphs...")
     GraphVisualizer.draw_side_by_side(graph, graph_randomized)
     print("Visualization complete.")
@@ -50,6 +73,9 @@ def main() -> None:
 
     elif args.task == 2:
         task_two()
+
+    elif args.task == 3:
+        task_three()
     else:
         print("Invalid task selected.")
 

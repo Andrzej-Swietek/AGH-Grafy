@@ -17,6 +17,10 @@ class GraphOperations(ABC):
     @abstractmethod
     def edge_exists(self, u: int, v: int) -> bool:
         pass
+    
+    @abstractmethod
+    def vertex_degree(self, u: int) -> int:
+        pass
 
 
 class GraphRepresentation(ABC):
@@ -32,9 +36,10 @@ class GraphRepresentation(ABC):
     def to_adjacency_list(self) -> Dict[int, List[int]]:
         pass
 
-    @abstractmethod
     def to_graphic_sequence(self) -> List[int]:
-        pass
+        graphic_sequence = [self.vertex_degree(u) for u in range(self.num_vertices)]
+        graphic_sequence.sort(reverse=True)
+        return graphic_sequence
 
 
 class Graph(GraphOperations, GraphRepresentation, ABC):

@@ -29,6 +29,9 @@ class AdjacencyListGraph(Graph):
 
     def edge_exists(self, u: int, v: int) -> bool:
         return v in self.adjacency_list.get(u, []) or u in self.adjacency_list.get(v, [])
+    
+    def vertex_degree(self, u: int) -> int:
+        return len(self.adjacency_list[u])
 
 
     def to_adjacency_matrix(self) -> List[List[int]]:
@@ -50,8 +53,3 @@ class AdjacencyListGraph(Graph):
 
     def to_adjacency_list(self) -> Dict[int, List[int]]:
         return self.adjacency_list
-    
-    def to_graphic_sequence(self) -> List[int]:
-        graphic_sequence = [len(neighbours) for neighbours in self.adjacency_list.values()]
-        graphic_sequence.sort(reverse=True)
-        return graphic_sequence

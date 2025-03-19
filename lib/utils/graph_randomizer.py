@@ -54,4 +54,4 @@ class GraphRandomizer:
     def randomize(graph: Graph, num_exchanges: int):
         for _ in range(num_exchanges):
             if not GraphRandomizer.exchange_random_edges(graph):
-                raise ValueError("Cannot randomize graph.")
+                raise ValueError("Cannot randomize graph by exchanging random edges.")

@@ -1,10 +1,11 @@
 from typing import List
 
+from lib.finders.finder import Finder
 from lib.core.graph import Graph
 from lib.graph_traversal.dfs_traversal import DFSVisitor
 
 
-class ComponentsFinder:
+class ComponentsFinder(Finder):
     @staticmethod
     def find(graph: Graph) -> List[List[int]]:
         """
@@ -26,6 +27,14 @@ class ComponentsFinder:
                 components.append(list(component))
 
         return components
+    
+    @staticmethod
+    def largest_component(graph: Graph) -> List[int]:
+        """
+        Znajduje największą spójną składową grafu.
+        """
+        components = ComponentsFinder.find(graph)
+        return max(components, key=len)
 
     @staticmethod
     def print_components(components: List[List[int]]):

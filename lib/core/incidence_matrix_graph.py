@@ -28,6 +28,9 @@ class IncidenceMatrixGraph(Graph):
     
     def vertex_degree(self, u: int) -> int:
         return sum(1 for edge in self.edges if u in edge)
+    
+    def vertex_neighbors(self, u: int) -> List[int]:
+        return [v for edge in self.edges if u in edge for v in edge if v != u]
 
     def to_adjacency_matrix(self) -> List[List[int]]:
         matrix = [[0] * self.num_vertices for _ in range(self.num_vertices)]

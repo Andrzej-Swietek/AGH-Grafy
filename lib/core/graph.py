@@ -21,6 +21,10 @@ class GraphOperations(ABC):
     @abstractmethod
     def vertex_degree(self, u: int) -> int:
         pass
+    
+    @abstractmethod
+    def vertex_neighbors(self, u: int) -> List[int]:
+        pass
 
 
 class GraphRepresentation(ABC):

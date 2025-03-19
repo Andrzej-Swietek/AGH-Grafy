@@ -1,6 +1,6 @@
 from typing import List
 
-class SequenceChecker:
+class GraphicSequenceChecker:
     @staticmethod
     def is_graphic(sequence: List[int]) -> bool:
         """

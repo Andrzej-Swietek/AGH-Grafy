@@ -4,7 +4,7 @@ from lib.core.graph import Graph
 from lib.core.adjacency_list_graph import AdjacencyListGraph
 from lib.core.adjacency_matrix_graph import AdjacencyMatrixGraph
 from lib.core.incidence_matrix_graph import IncidenceMatrixGraph
-from lib.utils.sequence_checker import SequenceChecker
+from lib.utils.graphic_sequence_checker import GraphicSequenceChecker
 from lib.core.graph_factory import GraphFactory
 
 import numpy as np
@@ -53,7 +53,7 @@ class GraphConverter:
 
     @classmethod
     def from_graphic_sequence(cls: Type['Graph'], graphic_sequence: List[int], graph_type = "adjacency_matrix") -> 'Graph': 
-        if not SequenceChecker.is_graphic(graphic_sequence):
+        if not GraphicSequenceChecker.is_graphic(graphic_sequence):
             raise ValueError("Provided sequence is not graphic.")
         
         num_vertices = len(graphic_sequence)

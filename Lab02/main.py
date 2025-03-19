@@ -3,8 +3,10 @@ from copy import deepcopy
 
 from lib.core.converter import GraphConverter
 from lib.visualization.graph_visualizer import GraphVisualizer
-from lib.utils.sequence_checker import SequenceChecker
-from lib.utils.components_finder import ComponentsFinder
+from lib.generators.RandomEulerianGraph import RandomEulerianGraph
+from lib.utils.graphic_sequence_checker import GraphicSequenceChecker
+from lib.finders.components_finder import ComponentsFinder
+from lib.finders.euler_cycle_finder import EulerCycleFinder
 from lib.utils.graph_randomizer import GraphRandomizer
 
 GRAPHIC_SEQUENCE = [4, 2, 2, 3, 2, 1, 4, 2, 2, 2, 2]
@@ -15,7 +17,7 @@ def task_one():
     print("Task 1")
     for seq in [GRAPHIC_SEQUENCE, NON_GRAPHIC_SEQUENCE]:
         print(f"Examined sequence: {seq}")
-        graphic = SequenceChecker.is_graphic(seq)
+        graphic = GraphicSequenceChecker.is_graphic(seq)
         print(f"Is graphic: {graphic}")
         if graphic:
             graph = GraphConverter.from_graphic_sequence(seq)
@@ -59,22 +61,35 @@ def task_three():
     GraphVisualizer.draw_side_by_side(graph, graph_randomized)
     print("Visualization complete.")
 
+def task_four():
+    print("Task 4")
+    n=6
+    print(f"Creating random eulerian graph with {n} vertices ...")
+    graph = RandomEulerianGraph(n).generate()
+    print("Graph created successfully.")
+    euler_cycle = EulerCycleFinder.find(graph)
+    print(f"Eulerian cycle: {euler_cycle}")
+    print("Visualizing graph...")
+    GraphVisualizer.draw(graph)
+    print("Visualization complete.")
+    print("Removing subsequent edges to show that euler cycle is correct...")
+    for i in range(len(euler_cycle) - 1):
+        graph.remove_edge(euler_cycle[i], euler_cycle[i + 1])
+        GraphVisualizer.draw(graph)
+    print("Visualization complete.")
+    
 
+    
 def main() -> None:
     parser = argparse.ArgumentParser(description="Grafy-Lab02")
     parser.add_argument(
         "-t", "--task", type=int, required=True, help="Select Task (1-6)"
     )
     args = parser.parse_args()
-
-    if args.task == 1:
-        task_one()
-
-    elif args.task == 2:
-        task_two()
-
-    elif args.task == 3:
-        task_three()
+    
+    tasks = [task_one, task_two, task_three, task_four]
+    if 1 <= args.task <= 4:
+        tasks[args.task - 1]()
     else:
         print("Invalid task selected.")
 

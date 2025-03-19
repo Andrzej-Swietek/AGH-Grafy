@@ -32,6 +32,9 @@ class AdjacencyMatrixGraph(Graph):
     
     def vertex_degree(self, u: int) -> int:
         return sum(self.matrix[u])
+    
+    def vertex_neighbors(self, u: int) -> List[int]:
+        return [v for v in range(self.num_vertices) if self.matrix[u][v] == 1 and u != v]
 
     def to_adjacency_matrix(self) -> List[List[int]]:
         return self.matrix

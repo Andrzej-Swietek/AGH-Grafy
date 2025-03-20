@@ -4,9 +4,11 @@ from copy import deepcopy
 from lib.core.converter import GraphConverter
 from lib.visualization.graph_visualizer import GraphVisualizer
 from lib.generators.RandomEulerianGraph import RandomEulerianGraph
+from lib.generators.RandomRegularGraph import RandomRegularGraph
 from lib.utils.graphic_sequence_checker import GraphicSequenceChecker
 from lib.finders.components_finder import ComponentsFinder
 from lib.finders.euler_cycle_finder import EulerCycleFinder
+from lib.finders.hamiltonian_cycle_finder import HamiltonianCycleFinder
 from lib.utils.graph_randomizer import GraphRandomizer
 
 GRAPHIC_SEQUENCE = [4, 2, 2, 3, 2, 1, 4, 2, 2, 2, 2]
@@ -68,7 +70,8 @@ def task_four():
     graph = RandomEulerianGraph(n).generate()
     print("Graph created successfully.")
     euler_cycle = EulerCycleFinder.find(graph)
-    print(f"Eulerian cycle: {euler_cycle}")
+    print("Euler cycle: ", end="")
+    EulerCycleFinder.print_cycle(euler_cycle)
     print("Visualizing graph...")
     GraphVisualizer.draw(graph)
     print("Visualization complete.")
@@ -78,8 +81,34 @@ def task_four():
         GraphVisualizer.draw(graph)
     print("Visualization complete.")
     
-
     
+def task_five():
+    print("Task 5")
+    n=7
+    k=4
+    print(f"Creating random regular graph with {n} vertices and {k} vertex degree ...")
+    graph = RandomRegularGraph(n, k).generate()
+    print("Graph created successfully.")
+    print(f"Calculated vertex degrees: {[graph.vertex_degree(i) for i in range(graph.num_vertices)]}") 
+    print("Visualizing graph...")
+    GraphVisualizer.draw(graph)
+    print("Visualization complete.")
+    
+def task_six():
+    print("Task 6")
+    n=10
+    k=3
+    print(f"Creating random regular graph with {n} vertices and {k} vertex degree ...")
+    graph = RandomRegularGraph(n, k).generate()
+    print("Graph created successfully.")
+    hamiltonian_cycle = HamiltonianCycleFinder.find(graph)
+    print("Hamiltonian cycle: ", end="")
+    HamiltonianCycleFinder.print_cycle(hamiltonian_cycle)
+    print("Visualizing graph...")
+    GraphVisualizer.draw(graph)
+    print("Visualization complete.")
+    
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Grafy-Lab02")
     parser.add_argument(
@@ -87,8 +116,8 @@ def main() -> None:
     )
     args = parser.parse_args()
     
-    tasks = [task_one, task_two, task_three, task_four]
-    if 1 <= args.task <= 4:
+    tasks = [task_one, task_two, task_three, task_four, task_five, task_six]
+    if 1 <= args.task <= 6:
         tasks[args.task - 1]()
     else:
         print("Invalid task selected.")

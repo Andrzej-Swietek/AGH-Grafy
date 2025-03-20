@@ -4,9 +4,8 @@ from copy import deepcopy
 from lib.finders.finder import Finder
 from lib.graph_property_checker.eulerian_checker import EulerianChecker
 from lib.core.graph import Graph
-from lib.utils.bridge_checker import BridgeChecker
 
-
+#Hierholzer’s Algorithm
 class EulerCycleFinder(Finder):
     @staticmethod
     def find(graph: Graph) -> List[int] | None:
@@ -29,3 +28,7 @@ class EulerCycleFinder(Finder):
                 euler_cycle.append(cycle.pop())
         
         return euler_cycle[::-1]
+    
+    @staticmethod
+    def print_cycle(cycle: List[int]):
+        print(" -> ".join(str(vertex) for vertex in cycle + [cycle[0]]))

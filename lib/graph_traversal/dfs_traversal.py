@@ -13,7 +13,7 @@ class DFSVisitor(GraphTraversal):
                 return
             visited.add(v)
             callback(v)
-            for neighbor in graph.to_adjacency_list().get(v, []):
+            for neighbor in graph.vertex_neighbors(v):
                 dfs(neighbor)
 
         dfs(start_vertex)

@@ -14,4 +14,4 @@ class BFSVisitor(GraphTraversal):
             if v not in visited:
                 visited.add(v)
                 callback(v)
-                queue.extend(neighbor for neighbor in graph.to_adjacency_list().get(v, []) if neighbor not in visited)
+                queue.extend(neighbor for neighbor in graph.vertex_neighbors(v) if neighbor not in visited)

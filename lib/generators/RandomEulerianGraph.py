@@ -32,8 +32,3 @@ class RandomEulerianGraph(RandomGraphGenerator):
             raise ValueError("Maximal number of randomizations reached.")
         
         return graph
-        
-        
-        
-            
-        

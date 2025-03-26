@@ -14,7 +14,6 @@ from lib.utils.graph_randomizer import GraphRandomizer
 GRAPHIC_SEQUENCE = [4, 2, 2, 3, 2, 1, 4, 2, 2, 2, 2]
 NON_GRAPHIC_SEQUENCE = [4, 4, 3, 1, 2]
 
-
 def task_one():
     print("Task 1")
     for seq in [GRAPHIC_SEQUENCE, NON_GRAPHIC_SEQUENCE]:
@@ -107,7 +106,6 @@ def task_six():
     print("Visualizing graph...")
     GraphVisualizer.draw(graph)
     print("Visualization complete.")
-    
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Grafy-Lab02")
@@ -116,33 +114,8 @@ def main() -> None:
     )
     args = parser.parse_args()
     
-    tasks = [task_one, task_two, task_three, task_four, task_five, task_six]
-    if 1 <= args.task <= 6:
+    tasks = [task_one, task_two, task_three, task_four, task_five]
+    if 1 <= args.task <= 5:
         tasks[args.task - 1]()
     else:
         print("Invalid task selected.")
-
-
-if __name__ == "__main__":
-    """
-    1. Napisać program do sprawdzania, czy dana sekwencja liczb naturalnych
-    jest ciągiem graficznym, i do konstruowania grafu prostego o stopniach
-    wierzchołków zadanych przez ciąg graficzny.
-    """
-    """
-    2. Napisać program do randomizacji grafów prostych o zadanych stopniach wierzchołków. Do tego celu wielokrotnie powtórzyć operację zamieniającą losowo wybraną parę krawędzi: ab i cd na parę ad i bc.
-    """
-    """
-    3. Napisać program do znajdowania największej spójnej składowej na grafie.
-    """
-    """
-    4. Używając powyższych programów napisać program do tworzenia losowego grafu eulerowskiego i znajdowania na nim cyklu Eulera.
-    """
-    """
-    5. Napisać program do generowania losowych grafów k-regularnych.
-    """
-    """
-    6. Napisać program do sprawdzania (dla małych grafów), czy graf jest hamiltonowski.
-    """
-
-    main()

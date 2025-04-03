@@ -4,6 +4,7 @@ from lib.generators.GenerateRandomStronglyConnectedDigraph import generate_rando
 from lib.visualization.graph_visualizer import GraphVisualizer
 from lib.finders.KosarajuSCC import KosarajuSCC
 from lib.finders.bellmanford_finder import BellmanFordFinder
+from lib.graph_traversal.johnson import JohnsonAlgorithm
 
 def task_one():
     print("Generating digraph.")
@@ -36,10 +37,14 @@ def task_three():
     for target, path in paths.items():
         print(f"To {target}: Path {path}, Distance {distances[target]}")
     
-    
 
 def task_four():
-    print("")
+    n, p = 10, 0.5
+    graph = generate_random_strongly_connected_digraph(n, p)
+    GraphVisualizer.draw_digraph(graph)
+    
+    all_pairs = JohnsonAlgorithm(graph).johnson()
+    print(all_pairs)
 
 def main():
     parser = argparse.ArgumentParser(description="Grafy-Lab04")

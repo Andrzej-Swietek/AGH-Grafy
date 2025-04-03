@@ -1,13 +1,18 @@
 import argparse
-from lib.generators.RandomGraphGNK import RandomGraphGNK
+from lib.generators.RandomGraphGNP import RandomGraphGNP
 from lib.visualization.graph_visualizer import GraphVisualizer
 
 def task_one():
     print("Generating digraph.")
-    n, k = 10, 15
-    graph = RandomGraphGNK(n, k).generate_connected_weighted()
+    n, p = 10, 0.5
+    graph = RandomGraphGNP(n, p).generate_directed()
+
+    graph.fill_with_random_weights(1, 10)    
+    edges = graph.get_edges()
+    for (u, v, w) in edges:
+        print(f"{u} {v} {w}")
+    print("Graph generated with random weights.")
     
-    graph.fill_with_random_edges_uniform(1, 10)
     GraphVisualizer.draw_digraph(graph)
 
 def task_two():

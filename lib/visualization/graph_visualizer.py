@@ -4,6 +4,7 @@ import networkx as nx
 
 from lib.core.graph import Graph
 from lib.core.weighted_graph import WeightedGraph
+from lib.core.directed_graph import DirectedGraph
 
 class GraphVisualizer:
     @staticmethod
@@ -97,13 +98,15 @@ class GraphVisualizer:
         plt.show()
 
     @staticmethod
-    def draw_digraph(graph: WeightedGraph):
+    def draw_digraph(graph: DirectedGraph):
         G = nx.DiGraph()
         edges = graph.get_edges()
-        G.add_edges_from((u, v) for u, v, w in edges)
+        G.add_weighted_edges_from(edges)
 
-        pos = nx.spring_layout(G)
+        pos = nx.circular_layout(G)
 
         plt.figure(figsize=(8, 6))
         nx.draw(G, pos, with_labels=True, node_color='red', edge_color='black', node_size=500, font_color='white')
+        edge_labels = {(u, v): w for u, v, w in edges}
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='blue')
         plt.show()

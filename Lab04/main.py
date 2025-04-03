@@ -1,7 +1,9 @@
 import argparse
 from lib.generators.RandomGraphGNP import RandomGraphGNP
+from lib.generators.GenerateRandomStronglyConnectedDigraph import generate_random_strongly_connected_digraph
 from lib.visualization.graph_visualizer import GraphVisualizer
 from lib.finders.KosarajuSCC import KosarajuSCC
+from lib.finders.bellmanford_finder import BellmanFordFinder
 
 def task_one():
     print("Generating digraph.")
@@ -24,7 +26,17 @@ def task_two():
     print(sccs)
     
 def task_three():
-    print("")
+    n, p = 10, 0.5
+    graph = generate_random_strongly_connected_digraph(n, p)
+    GraphVisualizer.draw_digraph(graph)
+
+    distances, paths = BellmanFordFinder.find_shortest_paths(graph, 0)
+
+    print(f"Shortest paths from vertex {0}:")
+    for target, path in paths.items():
+        print(f"To {target}: Path {path}, Distance {distances[target]}")
+    
+    
 
 def task_four():
     print("")

@@ -77,3 +77,4 @@ class DirectedGraph(Graph):
                 if u != v and random.random() < 0.5: 
                     weight = random.randint(min_weight, max_weight)
                     self.add_edge(u, v, weight)
+        return self

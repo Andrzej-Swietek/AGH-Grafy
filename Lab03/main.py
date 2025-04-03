@@ -1,117 +1,101 @@
 import argparse
+import random
+import numpy as np
 from copy import deepcopy
-
-from lib.core.converter import GraphConverter
+from lib.generators.RandomGraphGNK import RandomGraphGNK
+from lib.finders.dijkstra_finder import DijkstraFinder
 from lib.visualization.graph_visualizer import GraphVisualizer
-from lib.generators.RandomEulerianGraph import RandomEulerianGraph
-from lib.generators.RandomRegularGraph import RandomRegularGraph
-from lib.utils.graphic_sequence_checker import GraphicSequenceChecker
-from lib.finders.components_finder import ComponentsFinder
-from lib.finders.euler_cycle_finder import EulerCycleFinder
-from lib.finders.hamiltonian_cycle_finder import HamiltonianCycleFinder
-from lib.utils.graph_randomizer import GraphRandomizer
-
-GRAPHIC_SEQUENCE = [4, 2, 2, 3, 2, 1, 4, 2, 2, 2, 2]
-NON_GRAPHIC_SEQUENCE = [4, 4, 3, 1, 2]
+from lib.core.converter import GraphConverter
+from lib.utils.graph_importer import GraphReader
+from lib.core.weighted_graph import WeightedGraph
+from lib.finders.mst_finder import MSTFinder
 
 def task_one():
-    print("Task 1")
-    for seq in [GRAPHIC_SEQUENCE, NON_GRAPHIC_SEQUENCE]:
-        print(f"Examined sequence: {seq}")
-        graphic = GraphicSequenceChecker.is_graphic(seq)
-        print(f"Is graphic: {graphic}")
-        if graphic:
-            graph = GraphConverter.from_graphic_sequence(seq)
-            print("Visualizing graph...")
-            GraphVisualizer.draw(graph)
-            print("Visualization complete.")
-
+    print("Generating connected random graph and assigning random weights.")
+    n, k = 10, 15
+    graph = WeightedGraph(RandomGraphGNK(n, k).generate_connected_weighted())
+    
+    graph.fill_with_random_edges_uniform(1, 10)    
+    # for u, v in graph.get_edges():
+    #     graph.set_edge_weight(u, v, random.randint(1, 10))
+    
+    edges = graph.get_edges()
+    for (u, v), w in edges:
+        print(f"{u} {v} {w}")
+    print("Graph generated with random weights.")
+    # GraphVisualizer.drawWeighted(graph)
 
 def task_two():
-    print("Task 2")
-    n = 10
-    print(f"Creating graph from graphic sequence: {GRAPHIC_SEQUENCE} ...")
-    graph = GraphConverter.from_graphic_sequence(GRAPHIC_SEQUENCE)
-    graph_randomized = deepcopy(graph)
-    print("Graph created successfully.")
-    print(f"Randomizing graph {n} times...")
-    GraphRandomizer.randomize(graph_randomized, n)
-    print("Randomizing done.")
-    print("Comparing graphs...")
-    GraphVisualizer.draw_side_by_side(graph, graph_randomized)
-    print("Visualization complete.")
-
+    print("Finding shortest paths for graph from the first task using Dijkstra's algorithm")
+    graph = task_one_graph()
+    source = 0
+    distances, paths = DijkstraFinder.find_shortest_paths(graph, source)
+    
+    print(f"Shortest paths from vertex {source}:")
+    for target, path in paths.items():
+        print(f"To {target}: Path {path}, Distance {distances[target]}")
+    
+    GraphVisualizer.draw(graph)
 
 def task_three():
-    print("Task 3")
-    print(f"Creating graph from graphic sequence: {GRAPHIC_SEQUENCE}")
-    graph = GraphConverter.from_graphic_sequence(GRAPHIC_SEQUENCE)
-    graph_randomized = deepcopy(graph)
-    print("Graph created successfully.")
-    print("Randomizing graph until it is has more than 1 connected component...")
-    n = 0
-    while len(ComponentsFinder.find(graph_randomized)) == 1:
-        GraphRandomizer.randomize(graph_randomized, 1)
-        n += 1
-    print(f"Graph randomized {n} times.")
-    print("Graph components:")
-    ComponentsFinder.print_components(ComponentsFinder.find(graph))
-    print("Randomized graph components:")
-    ComponentsFinder.print_components(ComponentsFinder.find(graph_randomized))
-    print("Comparing graphs...")
-    GraphVisualizer.draw_side_by_side(graph, graph_randomized)
-    print("Visualization complete.")
+    print("Computing all-pairs shortest path distance matrix for graph from the first task")
+    graph = task_one_graph()
+    num_vertices = graph.num_vertices
+    distance_matrix = np.full((num_vertices, num_vertices), np.inf)
+    
+    for i in range(num_vertices):
+        distances, _ = DijkstraFinder.find(graph, i)
+        for j in range(num_vertices):
+            distance_matrix[i][j] = distances[j]
+    
+    print("Distance Matrix:")
+    print(distance_matrix)
 
 def task_four():
-    print("Task 4")
-    n=6
-    print(f"Creating random eulerian graph with {n} vertices ...")
-    graph = RandomEulerianGraph(n).generate()
-    print("Graph created successfully.")
-    euler_cycle = EulerCycleFinder.find(graph)
-    print("Euler cycle: ", end="")
-    EulerCycleFinder.print_cycle(euler_cycle)
-    print("Visualizing graph...")
-    GraphVisualizer.draw(graph)
-    print("Visualization complete.")
-    print("Removing subsequent edges to show that euler cycle is correct...")
-    for i in range(len(euler_cycle) - 1):
-        graph.remove_edge(euler_cycle[i], euler_cycle[i + 1])
-        GraphVisualizer.draw(graph)
-    print("Visualization complete.")
+    print("Finding graph center and minimax center for graph from the first task")
+    graph = task_one_graph()
+    num_vertices = graph.num_vertices
+    distance_matrix = np.full((num_vertices, num_vertices), np.inf)
     
+    for i in range(num_vertices):
+        distances, _ = DijkstraFinder.find(graph, i)
+        for j in range(num_vertices):
+            distance_matrix[i][j] = distances[j]
     
-def task_five():
-    print("Task 5")
-    n=7
-    k=4
-    print(f"Creating random regular graph with {n} vertices and {k} vertex degree ...")
-    graph = RandomRegularGraph(n, k).generate()
-    print("Graph created successfully.")
-    print(f"Calculated vertex degrees: {[graph.vertex_degree(i) for i in range(graph.num_vertices)]}") 
-    print("Visualizing graph...")
-    GraphVisualizer.draw(graph)
-    print("Visualization complete.")
+    eccentricities = np.max(distance_matrix, axis=1)
+    min_eccentricity = np.min(eccentricities)
+    minimax_center = np.argmin(eccentricities)
     
-def task_six():
-    print("Task 6")
-    n=10
-    k=3
-    print(f"Creating random regular graph with {n} vertices and {k} vertex degree ...")
-    graph = RandomRegularGraph(n, k).generate()
-    print("Graph created successfully.")
-    hamiltonian_cycle = HamiltonianCycleFinder.find(graph)
-    print("Hamiltonian cycle: ", end="")
-    HamiltonianCycleFinder.print_cycle(hamiltonian_cycle)
-    print("Visualizing graph...")
-    GraphVisualizer.draw(graph)
-    print("Visualization complete.")
+    sums = np.sum(distance_matrix, axis=1)
+    center = np.argmin(sums)
+    
+    print(f"Graph Center: {center}")
+    print(f"Minimax Center: {minimax_center}")
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Grafy-Lab02")
-    parser.add_argument(
-        "-t", "--task", type=int, required=True, help="Select Task (1-6)"
-    )
+def task_five():
+    print("Finding Minimum Spanning Tree using Prim's algorithm for graph from the first task")
+    graph = task_one_graph()
+    mst = MSTFinder.find_prim(graph)
+    
+    print("MST Edges:")
+    for u, v, weight in mst:
+        print(f"{u} - {v}, weight: {weight}")
+    
+    GraphVisualizer.draw(graph)
+
+def task_one_graph():
+    """ Helper function to ensure graph is the same across tasks """
+    n, k = 10, 15
+    base_graph = RandomGraphGNK(n, k).generate_connected_weighted()
+    graph = WeightedGraph(base_graph.num_vertices)
+    # for u, v in graph.get_edges():
+    #     graph.set_edge_weight(u, v, random.randint(1, 10))
+    graph.fill_with_random_edges_uniform(1, 10) 
+    return graph
+
+def main():
+    parser = argparse.ArgumentParser(description="Grafy-Lab03")
+    parser.add_argument("-t", "--task", type=int, required=True, help="Select Task (1-5)")
     args = parser.parse_args()
     
     tasks = [task_one, task_two, task_three, task_four, task_five]
@@ -119,3 +103,29 @@ def main() -> None:
         tasks[args.task - 1]()
     else:
         print("Invalid task selected.")
+
+if __name__ == "__main__":
+    """
+    1. Korzystając z programów z poprzednich zestawów wygenerować spójny
+    graf losowy. Przypisać każdej krawędzi tego grafu losową wagę będącą
+    liczbą naturalną z zakresu 1 do 10.
+    """
+    """
+    2. Zaimplementować algorytm Dijkstry do znajdowania najkrótszych ścieżek od zadanego wierzchołka do pozostałych wierzchołków i zastosować
+    go do grafu z zadania pierwszego, w którym wagi krawędzi interpretowane są jako odległości wierzchołków. Wypisać wszystkie najkrótsze
+    ścieżki od danego wierzchołka i ich długości.
+    """
+    """
+    3. Wyznaczyć macierz odległości miedzy wszystkimi parami wierzchołków
+    na tym grafie.
+    """
+    """
+    4. Wyznaczyć centrum grafu, to znaczy wierzchołek, którego suma odległości do pozostałych wierzchołków jest minimalna. Wyznaczyć centrum minimax, to znaczy wierzchołek, którego odległość do najdalszego
+    wierzchołka jest minimalna.
+    """
+    """
+    5. Wyznaczyć minimalne drzewo rozpinające (algorytm Prima lub Kruskala).
+    """
+    main()
+
+task_one()

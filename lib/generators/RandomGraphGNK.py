@@ -1,6 +1,7 @@
 from random import random, sample
 
 from lib.core.graph import Graph
+from lib.core.weighted_graph import WeightedGraph
 from lib.core.adjacency_matrix_graph import AdjacencyMatrixGraph
 from lib.generators.RandomGraphGeneator import RandomGraphGenerator
 from lib.generators.RandomTree import RandomTree
@@ -35,6 +36,30 @@ class RandomGraphGNK(RandomGraphGenerator):
             u, v = sample(range(self.num_vertices), 2)
             if (u, v) not in edges and (v, u) not in edges:
                 graph.add_edge(u, v)
+                edges.add((u, v))
+    
+    def generateWeighted(self) -> WeightedGraph:
+        graph = WeightedGraph(self.num_vertices)
+        edges = set()
+        while len(edges) < self.num_edges:
+            u, v = sample(range(self.num_vertices), 2)
+            if (u, v) not in edges and (v, u) not in edges:
+                graph.add_edge(u, v, 0)
+                edges.add((u, v))
+        return graph
+    
+    def generate_connected_weighted(self) -> WeightedGraph:
+        if self.num_edges < self.num_vertices - 1:
+            raise ValueError("Too few edges to generate connected graph.")
+        
+        treeGraph = RandomTree(self.num_vertices).generate()
+        edges = set(treeGraph.get_edges())
+        
+        graph = WeightedGraph(self.num_vertices)
+        while len(edges) < self.num_edges:
+            u, v = sample(range(self.num_vertices), 2)
+            if (u, v) not in edges and (v, u) not in edges:
+                graph.add_edge(u, v, 0)
                 edges.add((u, v))
                 
         return graph

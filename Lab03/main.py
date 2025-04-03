@@ -13,17 +13,14 @@ from lib.finders.mst_finder import MSTFinder
 def task_one():
     print("Generating connected random graph and assigning random weights.")
     n, k = 10, 15
-    graph = WeightedGraph(RandomGraphGNK(n, k).generate_connected_weighted())
+    graph = RandomGraphGNK(n, k).generate_connected_weighted()
     
     graph.fill_with_random_edges_uniform(1, 10)    
-    # for u, v in graph.get_edges():
-    #     graph.set_edge_weight(u, v, random.randint(1, 10))
-    
     edges = graph.get_edges()
-    for (u, v), w in edges:
+    for (u, v, w) in edges:
         print(f"{u} {v} {w}")
     print("Graph generated with random weights.")
-    # GraphVisualizer.drawWeighted(graph)
+    GraphVisualizer.drawWeighted(graph, True)
 
 def task_two():
     print("Finding shortest paths for graph from the first task using Dijkstra's algorithm")
@@ -35,7 +32,7 @@ def task_two():
     for target, path in paths.items():
         print(f"To {target}: Path {path}, Distance {distances[target]}")
     
-    GraphVisualizer.draw(graph)
+    GraphVisualizer.drawWeighted(graph)
 
 def task_three():
     print("Computing all-pairs shortest path distance matrix for graph from the first task")
@@ -44,12 +41,13 @@ def task_three():
     distance_matrix = np.full((num_vertices, num_vertices), np.inf)
     
     for i in range(num_vertices):
-        distances, _ = DijkstraFinder.find(graph, i)
+        distances, _ = DijkstraFinder.find_shortest_paths(graph, i)
         for j in range(num_vertices):
             distance_matrix[i][j] = distances[j]
     
     print("Distance Matrix:")
     print(distance_matrix)
+    GraphVisualizer.drawWeighted(graph)
 
 def task_four():
     print("Finding graph center and minimax center for graph from the first task")
@@ -58,7 +56,7 @@ def task_four():
     distance_matrix = np.full((num_vertices, num_vertices), np.inf)
     
     for i in range(num_vertices):
-        distances, _ = DijkstraFinder.find(graph, i)
+        distances, _ = DijkstraFinder.find_shortest_paths(graph, i)
         for j in range(num_vertices):
             distance_matrix[i][j] = distances[j]
     
@@ -75,21 +73,18 @@ def task_four():
 def task_five():
     print("Finding Minimum Spanning Tree using Prim's algorithm for graph from the first task")
     graph = task_one_graph()
-    mst = MSTFinder.find_prim(graph)
+    mst, tolalWeight = MSTFinder.find_minimum_spanning_tree(graph)
     
     print("MST Edges:")
     for u, v, weight in mst:
         print(f"{u} - {v}, weight: {weight}")
     
-    GraphVisualizer.draw(graph)
+    GraphVisualizer.drawWeighted(graph)
 
 def task_one_graph():
     """ Helper function to ensure graph is the same across tasks """
     n, k = 10, 15
-    base_graph = RandomGraphGNK(n, k).generate_connected_weighted()
-    graph = WeightedGraph(base_graph.num_vertices)
-    # for u, v in graph.get_edges():
-    #     graph.set_edge_weight(u, v, random.randint(1, 10))
+    graph = RandomGraphGNK(n, k).generate_connected_weighted()
     graph.fill_with_random_edges_uniform(1, 10) 
     return graph
 
@@ -127,5 +122,3 @@ if __name__ == "__main__":
     5. Wyznaczyć minimalne drzewo rozpinające (algorytm Prima lub Kruskala).
     """
     main()
-
-task_one()

@@ -9,6 +9,7 @@ class MSTFinder:
             return [], 0  # Empty graph case
 
         mst_edges = []
+        
         total_weight = 0
         visited = set()
         priority_queue = [(0, 0, None)]
@@ -24,7 +25,7 @@ class MSTFinder:
                 mst_edges.append((parent, vertex, weight))
                 total_weight += weight
 
-            for neighbor, edge_weight in graph.get_neighbors(vertex).items():
+            for neighbor, edge_weight in graph.vertex_neighbors_weights(vertex):
                 if neighbor not in visited:
                     heapq.heappush(priority_queue, (edge_weight, neighbor, vertex))
 

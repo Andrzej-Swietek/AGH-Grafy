@@ -66,7 +66,7 @@ class GraphVisualizer:
         ax.set_yticks([])
         ax.axis('off')
 
-        for (u, v), weight in edges:
+        for (u, v, weight) in edges:
             x_values = [positions[u][0], positions[v][0]]
             y_values = [positions[u][1], positions[v][1]]
             ax.plot(x_values, y_values, 'k-', lw=1)

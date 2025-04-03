@@ -36,14 +36,12 @@ class DirectedGraph(Graph):
     def vertex_out_neighbors(self, u: int):
         return [v for (x, v) in self.edges.keys() if x == u]
     
-
     def vertex_neighbors_weights(self, v: int):
         return [[u, self.edges[(u, v)]] for (u, x) in self.edges.keys() if x == v]
     
     def vertex_out_neighbors_weights(self, u: int):
         return [[v, self.edges[(u, v)]] for (x, v) in self.edges.keys() if x == u]
     
-
     def to_adjacency_matrix(self):
         matrix = [[0] * self.num_vertices for _ in range(self.num_vertices)]
         for (u, v), w in self.edges.items():

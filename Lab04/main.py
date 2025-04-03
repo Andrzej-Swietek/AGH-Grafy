@@ -17,8 +17,11 @@ def task_one():
     GraphVisualizer.draw_digraph(graph)
 
 def task_two():
-    graph = RandomGraphGNK(10, 15).generate_connected_weighted()
+    n, p = 10, 0.5
+    graph = RandomGraphGNP(n, p).generate_directed()
     sccs = KosarajuSCC(graph).find_sccs()
+    print("Silnie spójne składowe:")
+    print(sccs)
     
 def task_three():
     print("")

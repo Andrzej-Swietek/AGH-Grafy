@@ -1,6 +1,7 @@
 import argparse
 from lib.generators.RandomGraphGNP import RandomGraphGNP
 from lib.visualization.graph_visualizer import GraphVisualizer
+from lib.finders.KosarajuSCC import KosarajuSCC
 
 def task_one():
     print("Generating digraph.")
@@ -16,8 +17,9 @@ def task_one():
     GraphVisualizer.draw_digraph(graph)
 
 def task_two():
-    print("")
-
+    graph = RandomGraphGNK(10, 15).generate_connected_weighted()
+    sccs = KosarajuSCC(graph).find_sccs()
+    
 def task_three():
     print("")
 

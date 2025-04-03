@@ -66,3 +66,14 @@ class DirectedGraph(Graph):
         for (u, v, w) in edges:
             self.edges[(u, v)] = random.randint(min_value, max_value)
         return self
+    
+    def generate_random_strongly_connected_digraph(self, min_weight: int = -5, max_weight: int = 10):
+        
+        for i in range(self.num_vertices):
+            self.add_edge(i, (i + 1) % self.num_vertices, random.randint(min_weight, max_weight))
+        
+        for u in range(self.num_vertices):
+            for v in range(self.num_vertices):
+                if u != v and random.random() < 0.5: 
+                    weight = random.randint(min_weight, max_weight)
+                    self.add_edge(u, v, weight)

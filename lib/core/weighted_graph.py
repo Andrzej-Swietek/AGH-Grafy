@@ -36,7 +36,7 @@ class WeightedGraph(Graph):
         for (u, v), w in self.edges.items():
             matrix[u][v] = w
             matrix[v][u] = w
-        return matrix1
+        return matrix
 
     def to_adjacency_list(self):
         adj_list = {i: [] for i in range(self.num_vertices)}

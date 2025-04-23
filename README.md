@@ -25,6 +25,10 @@ python -m Lab02.main -t <task_number from 1 to 6>
 
 ### Lab 03
 
+```shell
+python -m Lab03.main -t <task_number from 1 to 5>
+```
+
 ### Lab 04
 
 ### Lab 05

@@ -67,8 +67,11 @@ def task_four():
     sums = np.sum(distance_matrix, axis=1)
     center = np.argmin(sums)
     
+    print("Distance Matrix:")
+    print(distance_matrix)
     print(f"Graph Center: {center}")
     print(f"Minimax Center: {minimax_center}")
+    GraphVisualizer.drawWeighted(graph)
 
 def task_five():
     print("Finding Minimum Spanning Tree using Prim's algorithm for graph from the first task")
@@ -119,6 +122,6 @@ if __name__ == "__main__":
     wierzchołka jest minimalna.
     """
     """
-    5. Wyznaczyć minimalne drzewo rozpinające (algorytm Prima lub Kruskala).
+    5. Wyznaczyć minimalne drzewo rozpinające (algorytm Prima lub Kruskala). Wybrano algorytm Prima
     """
     main()

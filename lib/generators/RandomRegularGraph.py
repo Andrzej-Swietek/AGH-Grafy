@@ -4,7 +4,6 @@ from lib.core.graph import Graph
 from lib.generators.RandomGraphGeneator import RandomGraphGenerator
 from lib.core.converter import GraphConverter
 from lib.utils.graphic_sequence_checker import GraphicSequenceChecker
-from lib.graph_property_checker.connected_checker import ConnectedChecker
 from lib.utils.graph_randomizer import GraphRandomizer
 
 

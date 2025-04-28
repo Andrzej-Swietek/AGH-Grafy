@@ -22,7 +22,9 @@ class RandomRegularGraph(RandomGraphGenerator):
             raise ValueError("Number of vertices must be even for odd degree.")
 
     def check_input(self) -> bool:
-        return (self.num_vertices > self.vertex_degree) and (self.num_vertices % 2 == 0 if self.vertex_degree % 2 == 1 else True)
+        return (self.num_vertices > self.vertex_degree) and (
+            self.num_vertices % 2 == 0 if self.vertex_degree % 2 == 1 else True
+        )
 
     def generate(self) -> Graph:
         seq = [self.vertex_degree] * self.num_vertices

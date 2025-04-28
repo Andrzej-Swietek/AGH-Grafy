@@ -31,4 +31,4 @@ class EulerCycleFinder(Finder):
     
     @staticmethod
     def print_cycle(cycle: List[int]):
-        print(" -> ".join(str(vertex) for vertex in cycle + [cycle[0]]))
+        print(" -> ".join(map(str, cycle)))

@@ -1,59 +1,162 @@
 import argparse
+from collections import defaultdict
+
+from lib.core.converter import GraphConverter
 from lib.generators.RandomGraphGNP import RandomGraphGNP
-from lib.generators.GenerateRandomStronglyConnectedDigraph import generate_random_strongly_connected_digraph
+from lib.utils.graph_importer import GraphWriter, GraphReader
 from lib.visualization.graph_visualizer import GraphVisualizer
-from lib.finders.KosarajuSCC import KosarajuSCC
-from lib.finders.bellmanford_finder import BellmanFordFinder
-from lib.graph_traversal.johnson import JohnsonAlgorithm
 
-def task_one():
-    print("Generating digraph.")
-    n, p = 10, 0.5
-    graph = RandomGraphGNP(n, p).generate_directed()
+from lib.finders.strongly_connected_components_finder import SCCFinder
+from lib.finders.shortest_path_finder import ShortestPathFinder
+from lib.finders.distance_finder import DistanceFinder
 
-    graph.fill_with_random_weights(1, 10)    
-    edges = graph.get_edges()
-    for (u, v, w) in edges:
-        print(f"{u} {v} {w}")
-    print("Graph generated with random weights.")
-    
+def process_graph(input_file: str, input_type: str):
+    if input_type == "adjacency_matrix":
+        matrix = GraphReader.read_adjacency_matrix(input_file)
+        graph = GraphConverter.digraph_from_adjacency_matrix(matrix)
+    elif input_type == "adjacency_list":
+        adjacency_list = GraphReader.read_adjacency_list(input_file)
+        graph = GraphConverter.digraph_from_adjacency_list(adjacency_list)
+    elif input_type == "incidence_matrix":
+        incidence_matrix = GraphReader.read_incidence_matrix(input_file)
+        graph = GraphConverter.digraph_from_incidence_matrix(incidence_matrix)
+    else:
+        raise ValueError("Invalid input type")
+
+    print("Graph loaded successfully. Converting representations...")
+    GraphWriter.write_adjacency_matrix(graph, "output_adjacency_matrix.txt")
+    GraphWriter.write_adjacency_list(graph, "output_adjacency_list.txt")
+    GraphWriter.write_incidence_matrix(graph, "output_incidence_matrix.txt")
+
+    print("Graph representations saved. Generating visualizations...")
     GraphVisualizer.draw_digraph(graph)
+    GraphVisualizer.draw_natural_digraph(graph)
+    print("Visualization complete.")
+
+    return graph
+
+def generate_random_graph(n: int, param: float):
+    generator = RandomGraphGNP(n, param)
+    graph = generator.generate_directed()
+    print("Random graph generated successfully.")
+    GraphWriter.write_adjacency_matrix(graph, "output_adjacency_matrix.txt")
+    GraphWriter.write_adjacency_list(graph, "output_adjacency_list.txt")
+    GraphWriter.write_incidence_matrix(graph, "output_incidence_matrix.txt")
+    print("Graph representations saved. Generating visualizations...")
+    GraphVisualizer.draw_digraph(graph)
+    GraphVisualizer.draw_natural_digraph(graph)
+    print("Visualization complete.")
+    return graph
+
+def convert_to_strongly_connected(graph):
+    scc = SCCFinder.find(graph)
+    groups = defaultdict(list)
+    for v, c in enumerate(scc):
+        groups[c].append(v)
+    if len(groups) > 1:
+        print("Converting digraph to strongly connected...")
+        first_vertices = [vertices[0] for vertices in groups.values()]
+        u = first_vertices[0]
+        for v in first_vertices:
+            if u != v:
+                if not graph.edge_exists(u, v):
+                    graph.add_edge(u, v)
+                if not graph.edge_exists(v, u):
+                    graph.add_edge(v, u)
+            u = v
+
+        GraphWriter.write_adjacency_matrix(graph, "output_adjacency_matrix.txt")
+        GraphWriter.write_adjacency_list(graph, "output_adjacency_list.txt")
+        GraphWriter.write_incidence_matrix(graph, "output_incidence_matrix.txt")
+        print("Graph representations saved. Generating visualizations...")
+        GraphVisualizer.draw_digraph(graph)
+        print("Visualization complete.")
+        SCCFinder.find(graph)
+
+        print("Digraph converted into strongly connected.")
+    else:
+        print("Digraph strongly connected.")
+    return graph
+
+def task_one(input: str):
+    if "adj_list" in input:
+        process_graph(input, "adjacency_list")
+    elif "adj_matrix" in input:
+        process_graph(input, "adjacency_matrix")
+    elif "incidence_matrix" in input:
+        process_graph(input, "incidence_matrix")
+    else:
+        generate_random_graph(7, 0.5)
 
 def task_two():
-    n, p = 10, 0.5
-    graph = RandomGraphGNP(n, p).generate_directed()
-    sccs = KosarajuSCC(graph).find_sccs()
-    print("Silnie spójne składowe:")
-    print(sccs)
+    graph = process_graph("Lab04/data/adj_matrix_ex2.txt", "adjacency_matrix")
+    SCCFinder.find(graph)
     
 def task_three():
-    n, p = 10, 0.5
-    graph = generate_random_strongly_connected_digraph(n, p)
-    GraphVisualizer.draw_digraph(graph)
+    graph = generate_random_graph(7, 0.5)
+    graph = convert_to_strongly_connected(graph)
 
-    distances, paths = BellmanFordFinder.find_shortest_paths(graph, 0)
+    weighted_graph = graph.convert_to_weighted()
+    weighted_graph.fill_with_random_edges_uniform(1, 10) # range of weights; changed from -5 to 1 for testing
+    print("Graph filled with random weights. Generating visualizations...")
+    GraphVisualizer.draw_weighted_digraph(weighted_graph)
+    print("Visualization complete.")
 
-    print(f"Shortest paths from vertex {0}:")
-    for target, path in paths.items():
-        print(f"To {target}: Path {path}, Distance {distances[target]}")
-    
+    ShortestPathFinder.find(weighted_graph)
+
+    return weighted_graph
 
 def task_four():
-    n, p = 10, 0.5
-    graph = generate_random_strongly_connected_digraph(n, p)
-    GraphVisualizer.draw_digraph(graph)
+
+    graph = task_three()
+    DistanceFinder.find(graph)
+
+    """
+    graph = process_graph("Lab04/data/adj_matrix.txt", "adjacency_matrix")
+
+    weighted_graph = graph.convert_to_weighted()
+    weighted_graph.edges[(0, 1)] = 6
+    weighted_graph.edges[(0, 2)] = 3
+    weighted_graph.edges[(0, 4)] = -1
+
+    weighted_graph.edges[(1, 0)] = 10
+    weighted_graph.edges[(1, 2)] = -5
+    weighted_graph.edges[(1, 3)] = -4
+    weighted_graph.edges[(1, 4)] = 4
+    weighted_graph.edges[(1, 6)] = 4
+
+    weighted_graph.edges[(2, 5)] = 2
+
+    weighted_graph.edges[(3, 1)] = 5
+    weighted_graph.edges[(3, 6)] = 9
+
+    weighted_graph.edges[(4, 6)] = -4
+
+    weighted_graph.edges[(5, 1)] = 9
     
-    all_pairs = JohnsonAlgorithm(graph).johnson()
-    print(all_pairs)
+    weighted_graph.edges[(6, 5)] = 4
+
+    print("Graph filled with random weights. Generating visualizations...")
+    GraphVisualizer.draw_weighted_digraph(weighted_graph)
+    print("Visualization complete.")
+
+    DistanceFinder.find(weighted_graph)
+    """
+
 
 def main():
     parser = argparse.ArgumentParser(description="Grafy-Lab04")
     parser.add_argument("-t", "--task", type=int, required=True, help="Select Task (1-4)")
+    parser.add_argument('-i', '--input', type=str, help='Input file')
     args = parser.parse_args()
     
     tasks = [task_one, task_two, task_three, task_four]
     if 1 <= args.task <= 4:
-        tasks[args.task - 1]()
+        if(args.task == 1):
+            input_arg = args.input if args.input is not None else ""
+            tasks[args.task - 1](input_arg)
+        else:
+            tasks[args.task - 1]()
     else:
         print("Invalid task selected.")
 
@@ -70,7 +173,7 @@ if __name__ == "__main__":
     """
     3. Wykorzystując algorytmy z powyższych punktów wygenerować losowy
     silnie spójny digraf. Łukom tego digrafu przypisać losowe wagi będące
-    liczbami całkowitymi z zakresu [−5, 10]. Zaimplementować algorytm
+    liczbami całkowitymi z zakresu [-5, 10]. Zaimplementować algorytm
     Bellmana-Forda do znajdowania najkrótszych ścieżek od danego wierzchołka.
     """
 

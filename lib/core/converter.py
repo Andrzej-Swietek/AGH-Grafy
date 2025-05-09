@@ -4,6 +4,11 @@ from lib.core.graph import Graph
 from lib.core.adjacency_list_graph import AdjacencyListGraph
 from lib.core.adjacency_matrix_graph import AdjacencyMatrixGraph
 from lib.core.incidence_matrix_graph import IncidenceMatrixGraph
+
+from lib.core.adjacency_list_digraph import AdjacencyListDigraph
+from lib.core.adjacency_matrix_digraph import AdjacencyMatrixDigraph
+from lib.core.incidence_matrix_digraph import IncidenceMatrixDigraph
+
 from lib.utils.graphic_sequence_checker import GraphicSequenceChecker
 from lib.core.graph_factory import GraphFactory
 
@@ -74,4 +79,46 @@ class GraphConverter:
             indices = [indices[i] for i in sorting_indices]
             seq = [seq[i] for i in sorting_indices]
         
+        return graph
+    
+    @classmethod
+    def digraph_from_adjacency_matrix(cls: Type['Graph'], matrix: List[List[int]]) -> 'Graph':
+        num_vertices = len(matrix)
+        graph = AdjacencyMatrixDigraph(num_vertices)
+        for i in range(num_vertices):
+            for j in range(num_vertices):
+                if matrix[i][j] == 1:
+                    graph.add_edge(i, j)
+        return graph
+    
+    @classmethod
+    def digraph_from_incidence_matrix(cls: Type['Graph'], matrix: List[List[int]]) -> 'Graph':
+        num_vertices = len(matrix)
+        num_edges = len(matrix[0]) if matrix else 0
+        graph = IncidenceMatrixDigraph(num_vertices)
+
+        for edge_idx in range(num_edges):
+            from_vertex = to_vertex = None
+            for i in range(num_vertices):
+                if matrix[i][edge_idx] == -1:
+                    from_vertex = i
+                elif matrix[i][edge_idx] == 1:
+                    to_vertex = i
+
+            if from_vertex is not None and to_vertex is not None:
+                graph.add_edge(from_vertex, to_vertex)
+            else:
+                print(f"Warning: Edge {edge_idx} is not well-formed for a directed graph.")
+
+        return graph
+
+    @classmethod
+    def digraph_from_adjacency_list(cls: Type['Graph'], adjacency_list: Dict[int, List[int]]) -> 'Graph':
+        num_vertices = max(adjacency_list.keys()) + 1
+        graph = AdjacencyListDigraph(num_vertices)
+
+        for u, neighbors in adjacency_list.items():
+            for v in neighbors:
+                graph.add_edge(u, v)
+
         return graph

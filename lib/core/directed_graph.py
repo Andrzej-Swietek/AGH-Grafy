@@ -6,7 +6,7 @@ class DirectedGraph(Graph):
         self.num_vertices = num_vertices
         self.edges = {}  # {(u, v): weight}
     
-    def add_edge(self, u: int, v: int, weight: int):
+    def add_edge(self, u: int, v: int, weight: int = 0):
         if u != v:
             self.edges[(u, v)] = weight
     

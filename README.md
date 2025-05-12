@@ -34,11 +34,16 @@ python -m Lab03.main -t <task_number from 1 to 5>
 python -m Lab04.main -t 1 -i Lab04/data/adj_matrix.txt
 python -m Lab04.main -t 1 -i Lab04/data/adj_list.txt
 python -m Lab04.main -t 1 -i Lab04/data/incidence_matrix.txt
+```
 
+```shell
 python -m Lab04.main -t <task_number from 1 to 4>
 ```
 
 ### Lab 05
+```shell
+python -m Lab05.main -t <task_number from 1 to 2> -n 3
+```
 
 ### Lab 06
 

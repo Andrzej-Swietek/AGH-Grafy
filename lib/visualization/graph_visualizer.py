@@ -5,6 +5,7 @@ import networkx as nx
 from lib.core.graph import Graph
 from lib.core.weighted_graph import WeightedGraph
 from lib.core.weighted_digraph import WeightedDigraph
+from lib.core.flow_network import FlowNetwork
 
 class GraphVisualizer:
     @staticmethod
@@ -169,4 +170,62 @@ class GraphVisualizer:
         nx.draw(G, pos, with_labels=True, node_color='red', edge_color='black', node_size=500, font_color='white', connectionstyle="arc3,rad=0.1")
         edge_labels = nx.get_edge_attributes(G, 'weight')
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, connectionstyle="arc3,rad=0.1")
+        plt.show()
+
+    @staticmethod
+    def draw_flow_network(graph: FlowNetwork):
+        G = nx.DiGraph()
+        edges_dict = graph.edges
+        weighted_edges = [(u, v, w) for (u, v), w in edges_dict.items()]
+        G.add_weighted_edges_from(weighted_edges)
+
+        layers = graph.get_layers()
+        pos = {}
+        for layer_idx, layer in enumerate(layers):
+            y_step = 1.0 / (len(layer) + 1)
+            for i, node in enumerate(layer):
+                pos[node] = (layer_idx, (i + 1) * y_step)
+
+        plt.figure(figsize=(10, 5))
+        nx.draw(G, pos, with_labels=True, node_color='skyblue', node_size=600, font_color='black', edge_color='gray', arrows=True, connectionstyle="arc3,rad=0.1")
+        edge_labels = nx.get_edge_attributes(G, 'weight')
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, connectionstyle="arc3,rad=0.1")
+        plt.title("Auto-Layered Flow Network")
+        plt.axis('off')
+        plt.show()
+
+    @staticmethod
+    def draw_max_flow_network(graph: FlowNetwork, flows):
+        G = nx.DiGraph()
+        edges_dict = graph.edges
+        weighted_edges = [(u, v, w) for (u, v), w in edges_dict.items()]
+        G.add_weighted_edges_from(weighted_edges)
+
+        layers = graph.get_layers()
+        pos = {}
+        for layer_idx, layer in enumerate(layers):
+            y_step = 1.0 / (len(layer) + 1)
+            for i, node in enumerate(layer):
+                pos[node] = (layer_idx, (i + 1) * y_step)
+
+        plt.figure(figsize=(10, 5))
+        nx.draw(
+            G, pos, with_labels=True, node_color='skyblue', node_size=600,
+            font_color='black', edge_color='gray', arrows=True,
+            connectionstyle="arc3,rad=0.1"
+        )
+
+        # Create edge labels in format "flow/capacity"
+        edge_labels = {}
+        for (u, v), capacity in edges_dict.items():
+            flow = flows.get((u, v), 0)
+            edge_labels[(u, v)] = f"{flow}/{capacity}"
+
+        nx.draw_networkx_edge_labels(
+            G, pos, edge_labels=edge_labels,
+            connectionstyle="arc3,rad=0.1"
+        )
+
+        plt.title("Auto-Layered Flow Network")
+        plt.axis('off')
         plt.show()

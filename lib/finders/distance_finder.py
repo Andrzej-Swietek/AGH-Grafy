@@ -4,7 +4,7 @@ from lib.core.weighted_digraph import WeightedDigraph
 from lib.finders.shortest_path_finder import ShortestPathFinder
 from lib.finders.dijkstra_finder import DijkstraFinder
 
-#Johnsona Algorithm
+#Johnson Algorithm
 class DistanceFinder:
     @staticmethod
     def find(graph: WeightedDigraph) -> List[List[int]] | None:

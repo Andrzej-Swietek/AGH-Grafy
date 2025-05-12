@@ -1,10 +1,9 @@
 import argparse
-from Lab06.pagerank import DirectedGraph, PageRank
 import numpy as np
 import matplotlib.pyplot as plt
 
 from lib.annealers.tsp_annealer import TSPAnnealer
-
+from Lab06.pagerank import DirectedGraph, PageRank
 
 def task1() -> None:
     nodes = {

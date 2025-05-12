@@ -39,3 +39,9 @@ python -m Lab04.main -t <task_number from 1 to 4>
 ```
 
 ### Lab 05
+
+### Lab 06
+
+```shell
+python -m Lab06.main -t 2 -i Lab06/data/xqf131.txt
+```

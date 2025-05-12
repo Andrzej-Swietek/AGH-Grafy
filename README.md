@@ -46,7 +46,11 @@ python -m Lab05.main -t <task_number from 1 to 2> -n 3
 ```
 
 ### Lab 06
-
+#### Page Rank Task
+```shell
+python -m Lab06.main -t 1
+```
+#### Zadanie 2
 ```shell
 python -m Lab06.main -t 2 -i Lab06/data/xqf131.txt
 ```

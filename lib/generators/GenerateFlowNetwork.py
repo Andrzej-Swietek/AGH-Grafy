@@ -59,19 +59,29 @@ class RandomFlowNetwork(RandomGraphGenerator):
         vert += 1
         for node in prev_layer:
             graph.add_edge(node, vert, random.choice(range(1, 11)))
-        graph.num_vertices = vert
+        graph.num_vertices = vert + 1
         graph.inter_layers = self.infer_layers(graph, 0)
 
         for _ in range(2*self.inter_layers):
-            u = random.choice(range(1, graph.num_vertices - 1))
-            v = random.choice(range(1, graph.num_vertices - 1))
+            u = random.choice(range(1, vert ))
+            v = random.choice(range(1, vert ))
             added = False
-            while not added:
-                if u != v and not graph.edge_exists(u, v):
+            warden = 10*self.inter_layers
+            while not added and warden > 0:
+                if u != v and not graph.edge_exists(u, v) and not graph.edge_exists(v, u):
                     graph.add_edge(u, v, random.choice(range(1, 11)))
                     added = True
                 else:
-                    u = random.choice(range(1, graph.num_vertices - 1))
-                    v = random.choice(range(1, graph.num_vertices - 1))
+                    u = random.choice(range(1, vert ))
+                    v = random.choice(range(1, vert))
+                    warden -= 1
+            if warden <= 0:
+                for u in range(1, vert ):
+                    for v in range(1, vert):
+                        if u != v and not graph.edge_exists(u, v) and not graph.edge_exists(v, u):
+                            graph.add_edge(u, v, random.choice(range(1, 11)))
+                            added = True
+            if added == False:
+                return graph
         return graph
 

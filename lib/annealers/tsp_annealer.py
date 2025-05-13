@@ -12,9 +12,13 @@ class TSPAnnealer(Annealer):
         beta_function,
         max_iterations,
         solution_memory=False,
-        cost_memory=True,
+        cost_memory=False,
+        beta_memory=False,
+        p_accept_memory=False,
     ):
         self.num_cities = len(coords)
+        if self.num_cities < 4:
+            raise ValueError("Number of cities must be at least 4.")
         self.coords = coords
         self.beta_function = beta_function
         self.distances = [
@@ -27,6 +31,8 @@ class TSPAnnealer(Annealer):
             max_iterations=max_iterations,
             solution_memory=solution_memory,
             cost_memory=cost_memory,
+            beta_memory=beta_memory,
+            p_accept_memory=p_accept_memory,
         )
 
     def dist(self, i, j):
@@ -37,32 +43,33 @@ class TSPAnnealer(Annealer):
             return self.distances[(2 * self.num_cities - 1 - i) * i // 2 + j - i - 1]
 
     def propose_solution(self):
-        # 2-opt swap
-        i = random.randint(0, self.num_cities - 2)
-        j = i + 1
-
-        if i < 2:
-            k = random.randint(j + 1, self.num_cities - 2)
-        elif j > self.num_cities - 3:
-            k = random.randint(0, i - 2)
-        else:
-            k = random.choice([n for n in range(self.num_cities) if n not in (i, j)])
-
-        l = k + 1
-
-        _, start, end, _ = sorted([i, j, k, l])
+        # 2-opt swap (a, b) and (c, d) -> (a, c) and (b, d)
+        a = random.randint(-self.num_cities, -1)
+        b = a + 1
+        c = random.randint(b + 1, a + self.num_cities - 2)
+        d = c + 1
 
         new_solution = self.solution[:]
+        new_cost = (
+            self.cost
+            - self.dist(new_solution[a], new_solution[b])
+            - self.dist(new_solution[c], new_solution[d])
+            + self.dist(new_solution[a], new_solution[c])
+            + self.dist(new_solution[b], new_solution[d])
+        )
 
-        while start < end:
-            new_solution[start], new_solution[end] = (
-                new_solution[end],
-                new_solution[start],
+        while b < c:
+            (
+                new_solution[b],
+                new_solution[c],
+            ) = (
+                new_solution[c],
+                new_solution[b],
             )
-            start += 1
-            end -= 1
+            b += 1
+            c -= 1
 
-        return new_solution
+        return new_solution, new_cost
 
     def cost_function(self, solution):
         return sum(

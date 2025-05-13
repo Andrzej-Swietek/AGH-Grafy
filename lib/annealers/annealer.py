@@ -1,32 +1,41 @@
 from abc import ABC, abstractmethod
 import random
+from typing import Tuple
 
 
 class Annealer(ABC):
     def __init__(
-        self, initial_solution, max_iterations, solution_memory=False, cost_memory=True
+        self,
+        initial_solution,
+        max_iterations,
+        solution_memory=False,
+        cost_memory=False,
+        beta_memory=False,
+        p_accept_memory=False,
     ):
         self.initial_solution = initial_solution
+        self.max_iterations = max_iterations
         self.solution_memory = solution_memory
         self.cost_memory = cost_memory
-        self.max_iterations = max_iterations
+        self.beta_memory = beta_memory
+        self.p_accept_memory = p_accept_memory
 
         self.reset()
 
     @abstractmethod
-    def propose_solution(self):
+    def propose_solution(self) -> Tuple[any, float | None]:
         pass
 
     @abstractmethod
-    def cost_function(self, solution):
+    def cost_function(self, solution) -> float:
         pass
 
     @abstractmethod
-    def p_accept(self, new_cost):
+    def p_accept(self, new_cost) -> float:
         pass
 
     @abstractmethod
-    def beta(self):
+    def beta(self) -> float:
         pass
 
     def log_results(self):
@@ -34,6 +43,8 @@ class Annealer(ABC):
             self.solution_history.append(self.solution)
         if self.cost_memory:
             self.cost_history.append(self.cost)
+        if self.beta_memory:
+            self.beta_history.append(self.beta())
 
     def reset(self):
         self.solution = self.initial_solution
@@ -43,6 +54,7 @@ class Annealer(ABC):
         self.solution_history = []
         self.cost_history = []
         self.beta_history = []
+        self.p_accept_history = []
 
         self.log_results()
 
@@ -50,14 +62,21 @@ class Annealer(ABC):
         if self.iteration >= self.max_iterations:
             return False
 
-        new_solution = self.propose_solution()
-        new_cost = self.cost_function(new_solution)
+        new_solution, new_cost = self.propose_solution()
 
-        if random.random() <= self.p_accept(new_cost):
+        if new_cost is None:
+            new_cost = self.cost_function(new_solution)
+
+        p_acc = self.p_accept(new_cost)
+
+        if random.random() <= p_acc:
             self.solution = new_solution
             self.cost = new_cost
 
         self.log_results()
+
+        if self.p_accept_memory:
+            self.p_accept_history.append(p_acc)
 
         self.iteration += 1
 

@@ -51,7 +51,7 @@ class WeightedDigraph(Graph):
             matrix[u][j] = self.edges[(u, v)]
         return matrix
     
-    def fill_with_random_edges_uniform(self, min_value: int, max_value: int):
+    def fill_with_random_weights(self, min_value: int, max_value: int):
         for u in range(self.num_vertices):
             for v in range(self.num_vertices):
                 if (u, v) in self.edges:

@@ -47,6 +47,7 @@ class AdjacencyListDigraph(Graph):
 
         for edge_idx, (u, v) in enumerate(edges):
             incidence_matrix[u][edge_idx] = 1
+            incidence_matrix[v][edge_idx] = -1
 
         return incidence_matrix
 

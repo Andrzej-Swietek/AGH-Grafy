@@ -65,4 +65,7 @@ class MaxFlowFinder:
     
     @staticmethod
     def _print(graph: FlowNetwork, flows):
+        source = 0
+        max_flow = sum(flows[(source, v)] for v in graph.vertex_neighbors(source) if (source, v) in flows)
+        print(f"f(max) = {max_flow}")
         GraphVisualizer.draw_max_flow_network(graph, flows)

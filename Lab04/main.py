@@ -53,6 +53,7 @@ def convert_to_strongly_connected(graph):
     groups = defaultdict(list)
     for v, c in enumerate(scc):
         groups[c].append(v)
+
     if len(groups) > 1:
         print("Converting digraph to strongly connected...")
         first_vertices = [vertices[0] for vertices in groups.values()]
@@ -65,10 +66,7 @@ def convert_to_strongly_connected(graph):
                     graph.add_edge(v, u)
             u = v
 
-        GraphWriter.write_adjacency_matrix(graph, "output_adjacency_matrix.txt")
-        GraphWriter.write_adjacency_list(graph, "output_adjacency_list.txt")
-        GraphWriter.write_incidence_matrix(graph, "output_incidence_matrix.txt")
-        print("Graph representations saved. Generating visualizations...")
+        print("Generating visualizations...")
         GraphVisualizer.draw_digraph(graph)
         print("Visualization complete.")
         SCCFinder.find(graph)
@@ -76,7 +74,10 @@ def convert_to_strongly_connected(graph):
         print("Digraph converted into strongly connected.")
     else:
         print("Digraph strongly connected.")
+
     return graph
+
+
 
 def task_one(input: str):
     if "adj_list" in input:
@@ -85,19 +86,24 @@ def task_one(input: str):
         process_graph(input, "adjacency_matrix")
     elif "incidence_matrix" in input:
         process_graph(input, "incidence_matrix")
-    else:
-        generate_random_graph(7, 0.5)
+
+def task_one(n: int, p: float):
+        generate_random_graph(n, p)
+
+
 
 def task_two():
-    graph = process_graph("Lab04/data/adj_matrix_ex2.txt", "adjacency_matrix")
+    graph = process_graph("output_adjacency_matrix.txt", "adjacency_matrix")
     SCCFinder.find(graph)
     
-def task_three():
-    graph = generate_random_graph(7, 0.5)
-    graph = convert_to_strongly_connected(graph)
 
+def task_three():
+    graph = process_graph("output_adjacency_matrix.txt", "adjacency_matrix")
+
+    graph = convert_to_strongly_connected(graph)
     weighted_graph = graph.convert_to_weighted()
-    weighted_graph.fill_with_random_edges_uniform(1, 10) # range of weights; changed from -5 to 1 for testing
+    weighted_graph.fill_with_random_weights(-3, 10) # range of weights;
+
     print("Graph filled with random weights. Generating visualizations...")
     GraphVisualizer.draw_weighted_digraph(weighted_graph)
     print("Visualization complete.")
@@ -148,13 +154,19 @@ def main():
     parser = argparse.ArgumentParser(description="Grafy-Lab04")
     parser.add_argument("-t", "--task", type=int, required=True, help="Select Task (1-4)")
     parser.add_argument('-i', '--input', type=str, help='Input file')
+    parser.add_argument('-n', '--verticles', type=int, help='Number of verticles')
+    parser.add_argument('-p', '--probability', type=float, help='Probability')
     args = parser.parse_args()
     
     tasks = [task_one, task_two, task_three, task_four]
     if 1 <= args.task <= 4:
         if(args.task == 1):
-            input_arg = args.input if args.input is not None else ""
-            tasks[args.task - 1](input_arg)
+            if args.input:
+                tasks[0](args.input)
+            elif args.verticles is not None and args.probability is not None:
+                tasks[0](args.verticles, args.probability)
+            else:
+                print("Task 1 requires either -i INPUT or both -n VERTICLES and -p PROBABILITY.")
         else:
             tasks[args.task - 1]()
     else:

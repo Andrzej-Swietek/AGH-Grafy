@@ -41,6 +41,7 @@ class IncidenceMatrixDigraph(Graph):
         incidence_matrix = [[0] * len(self.edges) for _ in range(self.num_vertices)]
         for edge_idx, (u, v) in enumerate(self.edges):
             incidence_matrix[u][edge_idx] = 1
+            incidence_matrix[v][edge_idx] = -1
         return incidence_matrix
 
     def to_adjacency_list(self) -> Dict[int, List[int]]:
